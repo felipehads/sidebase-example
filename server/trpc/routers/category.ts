@@ -1,29 +1,21 @@
-import {publicProcedure, router} from "~/server/trpc/trpc";
-import {z} from "zod";
+import { publicProcedure, router } from "~/server/trpc/trpc";
+import { z } from "zod";
+import CreateCategoryUC from "~/server/application/CreateCategoryUC";
+import FindAllCategoriesUC from "~/server/application/FindAllCategoriesUC";
 
 const inputFindById = z.number()
 
 export const categoryRouter = router({
-    findById: publicProcedure
-        .input(inputFindById)
-        .query(({ctx, input}) => {
-            return ctx.prisma.categories.findUnique({
-                where: {
-                    id: input,
-                },
-            })
-        }),
     create: publicProcedure
         .input(z.string())
-        .mutation(async ({ctx, input}) => {
-            return ctx.prisma.categories.create({
-                data: {
-                    name: input,
-                }
-            })
+        .mutation(async ({ ctx, input }) => {
+            const uc = new CreateCategoryUC(ctx.repositoryFactory)
+            await uc.execute(input)
         }),
     findAll: publicProcedure
-        .query(async ({ctx}) => {
-            return ctx.prisma.categories.findMany()
+        .query(async ({ ctx }) => {
+            const uc = new FindAllCategoriesUC(ctx.repositoryFactory)
+            const categories = await uc.execute()
+            return categories
         }),
 })

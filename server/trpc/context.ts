@@ -1,5 +1,6 @@
-import type {inferAsyncReturnType} from '@trpc/server'
-import type {H3Event} from 'h3'
+import type { inferAsyncReturnType } from '@trpc/server'
+import type { H3Event } from 'h3'
+import { RepositoryFactoryDatabase } from '../repositories/RepositoryFactory'
 
 /**
  * Creates context for an incoming request
@@ -12,7 +13,7 @@ export function createContext(_event: H3Event) {
    * return { prisma: _event.context.prisma }
    * ```
    */
-  return { prisma: _event.context.prisma }
+  return { repositoryFactory: new RepositoryFactoryDatabase(_event.context.prisma) }
 }
 
 export type Context = inferAsyncReturnType<typeof createContext>
