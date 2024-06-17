@@ -10,12 +10,21 @@ export default interface RepositoryFactory {
 }
 
 export class RepositoryFactoryDatabase implements RepositoryFactory {
+    static instance: RepositoryFactoryDatabase;
+
     private categoryRepository: CategoryRepository;
     private productRepository: ProductRepository;
 
-    constructor(private readonly connection: PrismaClient) {
+    private constructor(private readonly connection: PrismaClient) {
         this.categoryRepository = new CategoryRepositoryDatabase(this.connection);
         this.productRepository = new ProductRepositoryDatabase(this.connection);
+    }
+
+    static getInstance(connection: PrismaClient): RepositoryFactoryDatabase {
+        if (!RepositoryFactoryDatabase.instance) {
+            RepositoryFactoryDatabase.instance = new RepositoryFactoryDatabase(connection);
+        }
+        return RepositoryFactoryDatabase.instance;
     }
 
     createCategoryRepository(): CategoryRepository {

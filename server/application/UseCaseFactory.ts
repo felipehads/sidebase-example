@@ -14,19 +14,29 @@ export default interface UseCaseFactory {
 }
 
 export class UseCaseFactoryDatabase implements UseCaseFactory {
+    static instance: UseCaseFactoryDatabase;
+
     private createCategoryUC: CreateCategoryUC;
     private createProductUC: CreateProductUC;
     private findAllCategoriesUC: FindAllCategoriesUC;
     private findProductsByCategoryIdUC: FindProductsByCategoryIdUC;
     private deleteProductByIdUC: DeleteProductByIdUC;
 
-    constructor(private readonly repositoryFactory: RepositoryFactory) {
+    private constructor(private readonly repositoryFactory: RepositoryFactory) {
         this.createCategoryUC = new CreateCategoryUC(this.repositoryFactory);
         this.createProductUC = new CreateProductUC(this.repositoryFactory);
         this.findAllCategoriesUC = new FindAllCategoriesUC(this.repositoryFactory);
         this.findProductsByCategoryIdUC = new FindProductsByCategoryIdUC(this.repositoryFactory);
         this.deleteProductByIdUC = new DeleteProductByIdUC(this.repositoryFactory);
     }
+
+    static getInstance(repositoryFactory: RepositoryFactory): UseCaseFactoryDatabase {
+        if (!UseCaseFactoryDatabase.instance) {
+            UseCaseFactoryDatabase.instance = new UseCaseFactoryDatabase(repositoryFactory);
+        }
+        return UseCaseFactoryDatabase.instance;
+    }
+
     findAllCategories(): FindAllCategoriesUC {
         return this.findAllCategoriesUC;
     }
@@ -43,6 +53,4 @@ export class UseCaseFactoryDatabase implements UseCaseFactory {
     createProduct(): CreateProductUC {
         return this.createProductUC;
     }
-
-
 }
