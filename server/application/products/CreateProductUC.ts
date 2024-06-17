@@ -1,5 +1,5 @@
-import RepositoryFactory from "../repositories/RepositoryFactory";
-import ProductRepository from "../repositories/products/ProductRepository";
+import RepositoryFactory from "../../repositories/RepositoryFactory";
+import ProductRepository from "../../repositories/products/ProductRepository";
 
 export default class CreateProductUC {
     private productRepository: ProductRepository;
@@ -8,8 +8,8 @@ export default class CreateProductUC {
         this.productRepository = factoryRepository.createProductRepository();
     }
 
-    async execute(name: string, price: number, categoryId: number): Promise<void> {
-        return this.productRepository.create(new CreateProductDTO(name, price, categoryId));
+    async execute(createProductDTO: CreateProductDTO): Promise<void> {
+        return this.productRepository.create(createProductDTO);
     }
 }
 

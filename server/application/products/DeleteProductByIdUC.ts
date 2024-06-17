@@ -1,5 +1,5 @@
-import RepositoryFactory from "../repositories/RepositoryFactory";
-import ProductRepository from "../repositories/products/ProductRepository";
+import RepositoryFactory from "../../repositories/RepositoryFactory";
+import ProductRepository from "../../repositories/products/ProductRepository";
 
 export default class DeleteProductByIdUC {
     private productRepository: ProductRepository;

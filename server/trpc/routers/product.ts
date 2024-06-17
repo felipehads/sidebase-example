@@ -1,8 +1,5 @@
-import { publicProcedure, router } from "~/server/trpc/trpc";
 import { z } from "zod";
-import FindProductsByCategoryIdUC from "~/server/application/FindProductsByCategoryIdUC";
-import CreateProductUC from "~/server/application/CreateProductUC";
-import DeleteProductByIdUC from "~/server/application/DeleteProductByIdUC";
+import { publicProcedure, router } from "~/server/trpc/trpc";
 
 const createProductValidation = z.object({
     name: z.string(),
@@ -15,18 +12,19 @@ export const productRouter = router({
     findProductsByCategoryId: publicProcedure
         .input(z.number().optional())
         .query(async ({ ctx, input }) => {
-            const uc = new FindProductsByCategoryIdUC(ctx.repositoryFactory)
+            const uc = ctx.useCaseFactory.findProductsByCategoryId()
             const products = await uc.execute(input)
             return products
         }),
     create: publicProcedure
         .input(createProductValidation)
         .mutation(async ({ ctx, input }) => {
-            const uc = new CreateProductUC(ctx.repositoryFactory)
-            await uc.execute(input.name, input.price, input.categoryId)
+            const { categoryId, name, price } = input
+            const uc = ctx.useCaseFactory.createProduct()
+            await uc.execute({ categoryId, name, price })
         }),
     delete: publicProcedure.input(z.number()).mutation(({ ctx, input }) => {
-        const uc = new DeleteProductByIdUC(ctx.repositoryFactory)
+        const uc = ctx.useCaseFactory.deleteProductById()
         return uc.execute(input)
     })
 

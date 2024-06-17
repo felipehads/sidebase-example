@@ -1,4 +1,4 @@
-import { CreateProductDTO } from "~/server/application/CreateProductUC";
+import { CreateProductDTO } from "~/server/application/products/CreateProductUC";
 import Product from "~/server/domain/Product";
 import ProductRepository from "./ProductRepository";
 import { PrismaClient } from "@prisma/client";

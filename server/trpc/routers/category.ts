@@ -1,20 +1,16 @@
-import { publicProcedure, router } from "~/server/trpc/trpc";
 import { z } from "zod";
-import CreateCategoryUC from "~/server/application/CreateCategoryUC";
-import FindAllCategoriesUC from "~/server/application/FindAllCategoriesUC";
-
-const inputFindById = z.number()
+import { publicProcedure, router } from "~/server/trpc/trpc";
 
 export const categoryRouter = router({
     create: publicProcedure
         .input(z.string())
         .mutation(async ({ ctx, input }) => {
-            const uc = new CreateCategoryUC(ctx.repositoryFactory)
+            const uc = ctx.useCaseFactory.createCategory()
             await uc.execute(input)
         }),
     findAll: publicProcedure
         .query(async ({ ctx }) => {
-            const uc = new FindAllCategoriesUC(ctx.repositoryFactory)
+            const uc = ctx.useCaseFactory.findAllCategories()
             const categories = await uc.execute()
             return categories
         }),

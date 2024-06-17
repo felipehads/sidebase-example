@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import CategoryRepository from "./categories/CategoryRepository";
-import ProductRepository from "./products/ProductRepository";
 import CategoryRepositoryDatabase from "./categories/CategoryRepositoryDatabase";
+import ProductRepository from "./products/ProductRepository";
 import ProductRepositoryDatabase from "./products/ProductRepositoryDatabase";
 
 export default interface RepositoryFactory {
@@ -10,12 +10,18 @@ export default interface RepositoryFactory {
 }
 
 export class RepositoryFactoryDatabase implements RepositoryFactory {
-    constructor(private readonly connection: PrismaClient) { }
+    private categoryRepository: CategoryRepository;
+    private productRepository: ProductRepository;
+
+    constructor(private readonly connection: PrismaClient) {
+        this.categoryRepository = new CategoryRepositoryDatabase(this.connection);
+        this.productRepository = new ProductRepositoryDatabase(this.connection);
+    }
 
     createCategoryRepository(): CategoryRepository {
-        return new CategoryRepositoryDatabase(this.connection);
+        return this.categoryRepository;
     }
     createProductRepository(): ProductRepository {
-        return new ProductRepositoryDatabase(this.connection);
+        return this.productRepository;
     }
 }

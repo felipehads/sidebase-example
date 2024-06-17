@@ -1,4 +1,4 @@
-import { CreateProductDTO } from "../../application/CreateProductUC";
+import { CreateProductDTO } from "../../application/products/CreateProductUC";
 import Product from "../../domain/Product";
 
 export default interface ProductRepository {
